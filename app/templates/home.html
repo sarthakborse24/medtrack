@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block extra_head %}
+<style>
+  .hero {
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(ellipse at 60% 0%, rgba(13,110,253,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 80%, rgba(13,202,240,0.12) 0%, transparent 50%),
+                var(--med-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13,110,253,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--med-accent);
+    margin-bottom: 1rem;
+  }
+  .hero-title {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title .gradient-text {
+    background: linear-gradient(135deg, #6ea8fe, #0dcaf0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--med-muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  .feature-card {
+    background: var(--med-card);
+    border: 1px solid var(--med-border);
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(13,110,253,0.12); }
+  .feature-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+  }
+  .feature-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 0.5rem; }
+  .feature-desc { color: var(--med-muted); font-size: 0.92rem; line-height: 1.6; }
+
+  .stat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(13,110,253,0.12);
+    border: 1px solid rgba(13,110,253,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6ea8fe;
+    margin-bottom: 1.5rem;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: #0dcaf0;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="stat-chip">
+          <span class="pulse-dot"></span>
+          Cloud-Powered • AWS DynamoDB
+        </div>
+        <div class="hero-eyebrow"><i class="bi bi-heart-pulse-fill me-2"></i>Healthcare Management</div>
+        <h1 class="hero-title">
+          Modern Care, <br>
+          <span class="gradient-text">Connected to You.</span>
+        </h1>
+        <p class="hero-desc">
+          MedTrack bridges patients and doctors on a secure, cloud-native platform.
+          Book appointments, access medical history, and receive real-time care — all in one place.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-med-primary px-4 py-2">
+            <i class="bi bi-person-plus-fill me-2"></i>Get Started as Patient
+          </a>
+          <a href="{{ url_for('auth.doctor_login') }}" class="btn btn-med-outline px-4 py-2">
+            <i class="bi bi-clipboard2-pulse me-2"></i>Doctor Portal
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="row g-3">
+          <!-- Mini stat cards -->
+          <div class="col-6">
+            <div class="card-med p-3 text-center">
+              <div class="fs-2 fw-bold" style="background:linear-gradient(135deg,#6ea8fe,#0dcaf0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">AWS</div>
+              <div class="text-med-muted small mt-1">DynamoDB &amp; SNS</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card-med p-3 text-center">
+              <div class="fs-2 fw-bold" style="color:#75d69c;"><i class="bi bi-shield-lock-fill"></i></div>
+              <div class="text-med-muted small mt-1">Secure &amp; Encrypted</div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-med p-3 d-flex align-items-center gap-3">
+              <div class="icon-circle ic-blue fs-4"><i class="bi bi-calendar2-check"></i></div>
+              <div>
+                <div class="fw-600">Instant Appointment Booking</div>
+                <div class="text-med-muted small">Pick your doctor, date &amp; time</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card-med p-3 d-flex align-items-center gap-3">
+              <div class="icon-circle ic-cyan fs-4"><i class="bi bi-file-medical"></i></div>
+              <div>
+                <div class="fw-600">Complete Medical History</div>
+                <div class="text-med-muted small">Access diagnosis reports anytime</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Features ═══ -->
+<section class="py-5 mt-3">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-700 fs-2 mb-2">Everything You Need</h2>
+      <p class="text-med-muted">A complete healthcare management experience.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon ic-blue"><i class="bi bi-person-circle"></i></div>
+          <div class="feature-title">Patient Portal</div>
+          <div class="feature-desc">Register, log in, book appointments, and view your complete medical history — all in one dashboard.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon ic-cyan"><i class="bi bi-clipboard2-pulse"></i></div>
+          <div class="feature-title">Doctor Dashboard</div>
+          <div class="feature-desc">Manage appointments, submit diagnosis reports, and view patient history — securely gated by role.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon ic-green"><i class="bi bi-bell-fill"></i></div>
+          <div class="feature-title">Real-Time Notifications</div>
+          <div class="feature-desc">Instant AWS SNS alerts on appointment booking and diagnosis submission keep everyone informed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="py-5">
+  <div class="container">
+    <div class="card-med p-5 text-center" style="background:linear-gradient(135deg,rgba(13,110,253,0.12),rgba(13,202,240,0.08));">
+      <h2 class="fw-700 mb-3">Ready to get started?</h2>
+      <p class="text-med-muted mb-4">Join MedTrack today and experience connected healthcare.</p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-med-primary px-4">
+          <i class="bi bi-person-plus-fill me-2"></i>Create Patient Account
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-med-outline px-4">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Patient Login
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

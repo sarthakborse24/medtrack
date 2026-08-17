@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <!-- Page Header -->
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <h1 class="page-title">
+        <i class="bi bi-grid-1x2 me-2 text-med-accent"></i>My Dashboard
+      </h1>
+      <p class="page-subtitle">Welcome back, {{ session.get('name', 'Patient') }}</p>
+    </div>
+    <a href="{{ url_for('appointments.book') }}" class="btn btn-med-primary">
+      <i class="bi bi-calendar-plus-fill me-2"></i>Book Appointment
+    </a>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3 text-med-accent">{{ appointments | length }}</div>
+        <div class="text-med-muted small">Total</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#ffc107;">{{ appointments | selectattr('Status','equalto','Pending') | list | length }}</div>
+        <div class="text-med-muted small">Pending</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#6ea8fe;">{{ appointments | selectattr('Status','equalto','Confirmed') | list | length }}</div>
+        <div class="text-med-muted small">Confirmed</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#75d69c;">{{ appointments | selectattr('Status','equalto','Completed') | list | length }}</div>
+        <div class="text-med-muted small">Completed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointments List -->
+  <h2 class="fw-600 fs-5 mb-3">My Appointments</h2>
+
+  {% if appointments %}
+    <div class="row g-3">
+      {% for appt in appointments %}
+      <div class="col-md-6 col-lg-4">
+        <a href="{{ url_for('patients.appointment_detail', appointment_id=appt.AppointmentID) }}"
+           class="text-decoration-none d-block h-100">
+          <div class="card-med p-4 h-100" style="cursor:pointer;">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div class="icon-circle ic-blue"><i class="bi bi-calendar2-check"></i></div>
+              <span class="badge rounded-pill px-3 py-1
+                {% if appt.Status == 'Pending' %}badge-pending
+                {% elif appt.Status == 'Confirmed' %}badge-confirmed
+                {% elif appt.Status == 'Completed' %}badge-completed
+                {% else %}badge-cancelled{% endif %}">
+                {{ appt.Status }}
+              </span>
+            </div>
+            <div class="fw-600 mb-1">Dr. {{ appt.DoctorName }}</div>
+            <div class="text-med-muted small mb-1">
+              <i class="bi bi-calendar3 me-1"></i>{{ appt.Date }} &nbsp;
+              <i class="bi bi-clock me-1"></i>{{ appt.Time }}
+            </div>
+            {% if appt.Reason %}
+            <div class="text-med-muted small mt-2">
+              <i class="bi bi-chat-square-text me-1"></i>{{ appt.Reason }}
+            </div>
+            {% endif %}
+            <div class="mt-3 pt-3 d-flex align-items-center gap-1 small"
+                 style="border-top:1px solid var(--med-border);color:var(--med-accent);">
+              <i class="bi bi-arrow-right-circle me-1"></i>View Details
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card-med p-5 text-center">
+      <div class="icon-circle ic-blue mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+        <i class="bi bi-calendar2"></i>
+      </div>
+      <h5 class="fw-600 mb-2">No appointments yet</h5>
+      <p class="text-med-muted mb-3">Book your first appointment to get started.</p>
+      <a href="{{ url_for('appointments.book') }}" class="btn btn-med-primary">
+        <i class="bi bi-calendar-plus-fill me-2"></i>Book Now
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- Quick Links -->
+  <div class="mt-4">
+    <a href="{{ url_for('patients.history') }}" class="btn btn-med-outline me-2">
+      <i class="bi bi-clock-history me-2"></i>View Medical History
+    </a>
+  </div>
+
+</div>
+{% endblock %}

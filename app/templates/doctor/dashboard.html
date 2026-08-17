@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="bi bi-clipboard2-pulse me-2 text-med-accent"></i>Doctor Dashboard
+    </h1>
+    <p class="page-subtitle">Dr. {{ session.get('name', '') }} — Manage your appointments</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3 text-med-accent">{{ appointments | length }}</div>
+        <div class="text-med-muted small">Total</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#ffc107;">{{ appointments | selectattr('Status','equalto','Pending') | list | length }}</div>
+        <div class="text-med-muted small">Pending</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#6ea8fe;">{{ appointments | selectattr('Status','equalto','Confirmed') | list | length }}</div>
+        <div class="text-med-muted small">Confirmed</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card-med p-3 text-center">
+        <div class="fw-700 fs-3" style="color:#75d69c;">{{ appointments | selectattr('Status','equalto','Completed') | list | length }}</div>
+        <div class="text-med-muted small">Completed</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="fw-600 fs-5 mb-3">All Appointments</h2>
+
+  {% if appointments %}
+  <div class="table-responsive">
+    <table class="table table-borderless align-middle" style="color:var(--med-text);">
+      <thead>
+        <tr style="border-bottom:1px solid var(--med-border);color:var(--med-muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.5px;">
+          <th>Patient</th>
+          <th>Date &amp; Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appt in appointments %}
+        <tr style="border-bottom:1px solid var(--med-border);">
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="icon-circle ic-blue" style="width:36px;height:36px;font-size:0.85rem;">
+                <i class="bi bi-person"></i>
+              </div>
+              <div>
+                <div class="fw-500">{{ appt.PatientName }}</div>
+                <div class="text-med-muted" style="font-size:.8rem;">ID: {{ appt.PatientID[:8] }}…</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>{{ appt.Date }}</div>
+            <div class="text-med-muted small">{{ appt.Time }}</div>
+          </td>
+          <td class="text-med-muted small">{{ appt.Reason or '—' }}</td>
+          <td>
+            <span class="badge rounded-pill px-3 py-1
+              {% if appt.Status == 'Pending' %}badge-pending
+              {% elif appt.Status == 'Confirmed' %}badge-confirmed
+              {% elif appt.Status == 'Completed' %}badge-completed
+              {% else %}badge-cancelled{% endif %}">
+              {{ appt.Status }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex gap-2 flex-wrap">
+              <!-- Update Status -->
+              <form method="POST" action="{{ url_for('doctors.update_status', appointment_id=appt.AppointmentID) }}" class="d-inline">
+                <select name="status" class="form-select form-select-sm d-inline-block" style="width:130px;padding:.25rem .5rem;">
+                  <option value="Pending"   {% if appt.Status=='Pending'   %}selected{% endif %}>Pending</option>
+                  <option value="Confirmed" {% if appt.Status=='Confirmed' %}selected{% endif %}>Confirmed</option>
+                  <option value="Completed" {% if appt.Status=='Completed' %}selected{% endif %}>Completed</option>
+                  <option value="Cancelled" {% if appt.Status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+                <button type="submit" class="btn btn-sm btn-med-outline ms-1">Save</button>
+              </form>
+
+              <!-- Submit Diagnosis -->
+              {% if appt.Status != 'Cancelled' %}
+              <a href="{{ url_for('doctors.submit_diagnosis', appointment_id=appt.AppointmentID) }}"
+                 class="btn btn-sm btn-med-primary" title="Submit Diagnosis">
+                <i class="bi bi-plus-circle me-1"></i>Diagnosis
+              </a>
+              {% endif %}
+
+              <!-- View Patient History -->
+              <a href="{{ url_for('doctors.patient_history', patient_id=appt.PatientID) }}"
+                 class="btn btn-sm btn-med-outline" title="View Patient History">
+                <i class="bi bi-clock-history"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="card-med p-5 text-center">
+      <div class="icon-circle ic-cyan mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+        <i class="bi bi-calendar2"></i>
+      </div>
+      <h5 class="fw-600 mb-2">No appointments yet</h5>
+      <p class="text-med-muted">Appointments booked by patients will appear here.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

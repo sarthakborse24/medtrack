@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Patient History{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="page-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <h1 class="page-title">
+        <i class="bi bi-person-lines-fill me-2 text-med-accent"></i>{{ patient.Name }}'s History
+      </h1>
+      <p class="page-subtitle">Medical history for your patient</p>
+    </div>
+    <a href="{{ url_for('doctors.dashboard') }}" class="btn btn-med-outline">
+      <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Patient Info Card -->
+  <div class="card-med p-4 mb-4 d-flex align-items-center gap-3 flex-wrap">
+    <div class="icon-circle ic-blue" style="width:56px;height:56px;font-size:1.4rem;">
+      <i class="bi bi-person-circle"></i>
+    </div>
+    <div>
+      <div class="fw-700 fs-5">{{ patient.Name }}</div>
+      <div class="text-med-muted small">
+        <i class="bi bi-envelope me-1"></i>{{ patient.Email }}
+        {% if patient.Phone %}
+          &nbsp;&bull;&nbsp;<i class="bi bi-telephone me-1"></i>{{ patient.Phone }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <h2 class="fw-600 fs-5 mb-3">Diagnosis Reports</h2>
+
+  {% if reports %}
+    <div class="row g-3">
+      {% for report in reports %}
+      <div class="col-12">
+        <div class="card-med p-4">
+          <div class="d-flex gap-3 flex-wrap">
+            <div class="icon-circle ic-green" style="min-width:44px;">
+              <i class="bi bi-clipboard2-check"></i>
+            </div>
+            <div class="flex-grow-1">
+              <div class="text-med-muted small mb-2">
+                <i class="bi bi-calendar3 me-1"></i>{{ report.AppointmentDate }}
+              </div>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="fw-500 text-med-muted small mb-1">DIAGNOSIS</div>
+                  <div>{{ report.Diagnosis }}</div>
+                </div>
+                {% if report.Prescription %}
+                <div class="col-md-4">
+                  <div class="fw-500 text-med-muted small mb-1">PRESCRIPTION</div>
+                  <div>{{ report.Prescription }}</div>
+                </div>
+                {% endif %}
+                {% if report.Notes %}
+                <div class="col-md-4">
+                  <div class="fw-500 text-med-muted small mb-1">NOTES</div>
+                  <div class="text-med-muted">{{ report.Notes }}</div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card-med p-5 text-center">
+      <p class="text-med-muted mb-0">No diagnosis reports found for this patient.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

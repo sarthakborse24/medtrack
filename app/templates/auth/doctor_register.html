@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Doctor Registration{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+
+      <div class="text-center mb-4">
+        <div class="icon-circle ic-cyan mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+          <i class="bi bi-clipboard2-plus-fill"></i>
+        </div>
+        <h1 class="fw-700 fs-3 mb-1">Register as Doctor</h1>
+        <p class="text-med-muted">An admin secret is required to create a doctor account</p>
+      </div>
+
+      <div class="card-med p-4">
+
+        <!-- Admin secret notice -->
+        <div class="d-flex align-items-start gap-2 mb-4 p-3 rounded-3"
+             style="background:rgba(13,202,240,0.08);border:1px solid rgba(13,202,240,0.2);">
+          <i class="bi bi-shield-lock-fill mt-1" style="color:#0dcaf0;"></i>
+          <div class="small text-med-muted">
+            This page is restricted. You need the <strong style="color:var(--med-text);">Admin Secret</strong>
+            provided by your system administrator to proceed.
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.doctor_register') }}" novalidate>
+
+          <!-- Admin Secret -->
+          <div class="mb-4">
+            <label for="admin_secret" class="form-label">
+              Admin Secret <span class="text-danger">*</span>
+            </label>
+            <input type="password" class="form-control" id="admin_secret" name="admin_secret"
+                   placeholder="Enter the admin secret code" required>
+          </div>
+
+          <hr class="divider my-3">
+
+          <!-- Doctor Details -->
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" name="name"
+                   placeholder="Dr. Jane Smith" value="{{ name or '' }}" required autocomplete="name">
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="jane@hospital.com" value="{{ email or '' }}" required autocomplete="email">
+          </div>
+
+          <div class="mb-3">
+            <label for="specialization" class="form-label">Specialization <span class="text-danger">*</span></label>
+            <select class="form-select" id="specialization" name="specialization" required>
+              <option value="" disabled {% if not specialization %}selected{% endif %}>Select specialization…</option>
+              {% set specs = [
+                'General Practice', 'Cardiology', 'Dermatology', 'Endocrinology',
+                'Gastroenterology', 'Neurology', 'Oncology', 'Ophthalmology',
+                'Orthopedics', 'Pediatrics', 'Psychiatry', 'Pulmonology',
+                'Radiology', 'Rheumatology', 'Surgery', 'Urology', 'Other'
+              ] %}
+              {% for s in specs %}
+              <option value="{{ s }}" {% if specialization == s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone <span class="text-med-muted" style="font-weight:400;">(optional)</span></label>
+            <input type="tel" class="form-control" id="phone" name="phone"
+                   placeholder="+91 98765 43210" value="{{ phone or '' }}" autocomplete="tel">
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="Min. 8 characters" required autocomplete="new-password">
+          </div>
+
+          <div class="mb-4">
+            <label for="confirm_password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                   placeholder="Repeat your password" required autocomplete="new-password">
+          </div>
+
+          <button type="submit" class="btn btn-med-primary w-100" style="background:linear-gradient(135deg,#0dcaf0,#0d6efd);">
+            <i class="bi bi-clipboard2-check-fill me-2"></i>Create Doctor Account
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-med-muted mt-3 small">
+        Already have an account?
+        <a href="{{ url_for('auth.doctor_login') }}" class="text-med-accent text-decoration-none fw-500">Doctor login</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Patient Registration{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+
+      <div class="text-center mb-4">
+        <div class="icon-circle ic-blue mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+          <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h1 class="fw-700 fs-3 mb-1">Create Account</h1>
+        <p class="text-med-muted">Join MedTrack as a patient</p>
+      </div>
+
+      <div class="card-med p-4">
+        <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" name="name"
+                   placeholder="Jane Smith" value="{{ name or '' }}" required autocomplete="name">
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="jane@example.com" value="{{ email or '' }}" required autocomplete="email">
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone <span class="text-med-muted" style="font-weight:400;">(optional)</span></label>
+            <input type="tel" class="form-control" id="phone" name="phone"
+                   placeholder="+1 555 000 0000" value="{{ phone or '' }}" autocomplete="tel">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="Min. 8 characters" required autocomplete="new-password">
+          </div>
+          <div class="mb-4">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                   placeholder="Repeat your password" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-med-primary w-100">
+            <i class="bi bi-person-check-fill me-2"></i>Create Account
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-med-muted mt-3 small">
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}" class="text-med-accent text-decoration-none fw-500">Sign in</a>
+      </p>
+      <p class="text-center text-med-muted small">
+        Are you a doctor?
+        <a href="{{ url_for('auth.doctor_login') }}" class="text-med-accent text-decoration-none fw-500">Doctor login</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

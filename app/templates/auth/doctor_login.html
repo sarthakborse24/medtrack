@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Doctor Login{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+
+      <div class="text-center mb-4">
+        <div class="icon-circle ic-cyan mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+          <i class="bi bi-clipboard2-pulse"></i>
+        </div>
+        <h1 class="fw-700 fs-3 mb-1">Doctor Portal</h1>
+        <p class="text-med-muted">Healthcare professional access</p>
+      </div>
+
+      <div class="card-med p-4">
+        <form method="POST" action="{{ url_for('auth.doctor_login') }}" novalidate>
+          <div class="mb-3">
+            <label for="email" class="form-label">Doctor Email</label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="doctor@hospital.com" value="{{ email or '' }}" required autocomplete="email">
+          </div>
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="Your password" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-med-primary w-100" style="background:linear-gradient(135deg,#0dcaf0,#0d6efd);">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In to Doctor Portal
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-med-muted mt-3 small">
+        Are you a patient?
+        <a href="{{ url_for('auth.login') }}" class="text-med-accent text-decoration-none fw-500">Patient login</a>
+      </p>
+      <p class="text-center text-med-muted small">
+        New doctor?
+        <a href="{{ url_for('auth.doctor_register') }}" class="text-med-accent text-decoration-none fw-500">Register with admin code</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

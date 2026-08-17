@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Appointment Detail{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <!-- Back -->
+      <a href="{{ url_for('patients.dashboard') }}" class="btn btn-med-outline btn-sm mb-4">
+        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+      </a>
+
+      <!-- ── Appointment Card ── -->
+      <div class="card-med p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle ic-blue" style="width:56px;height:56px;font-size:1.4rem;">
+              <i class="bi bi-calendar2-check"></i>
+            </div>
+            <div>
+              <h1 class="fw-700 fs-4 mb-0">Appointment Detail</h1>
+              <div class="text-med-muted small mt-1">ID: {{ appt.AppointmentID[:12] }}…</div>
+            </div>
+          </div>
+          <span class="badge rounded-pill px-3 py-2 fs-6
+            {% if appt.Status == 'Pending' %}badge-pending
+            {% elif appt.Status == 'Confirmed' %}badge-confirmed
+            {% elif appt.Status == 'Completed' %}badge-completed
+            {% else %}badge-cancelled{% endif %}">
+            {{ appt.Status }}
+          </span>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="p-3 rounded-3" style="background:var(--med-surface);">
+              <div class="text-med-muted small mb-1 fw-500">
+                <i class="bi bi-person-fill me-1"></i>DOCTOR
+              </div>
+              <div class="fw-600">Dr. {{ appt.DoctorName }}</div>
+              {% if appt.DoctorSpecialization %}
+              <div class="text-med-muted small">{{ appt.DoctorSpecialization }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="p-3 rounded-3" style="background:var(--med-surface);">
+              <div class="text-med-muted small mb-1 fw-500">
+                <i class="bi bi-calendar3 me-1"></i>DATE
+              </div>
+              <div class="fw-600">{{ appt.Date }}</div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="p-3 rounded-3" style="background:var(--med-surface);">
+              <div class="text-med-muted small mb-1 fw-500">
+                <i class="bi bi-clock me-1"></i>TIME
+              </div>
+              <div class="fw-600">{{ appt.Time }}</div>
+            </div>
+          </div>
+
+          {% if appt.Reason %}
+          <div class="col-12">
+            <div class="p-3 rounded-3" style="background:var(--med-surface);">
+              <div class="text-med-muted small mb-1 fw-500">
+                <i class="bi bi-chat-square-text me-1"></i>REASON FOR VISIT
+              </div>
+              <div>{{ appt.Reason }}</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- ── Diagnosis Reports ── -->
+      <h2 class="fw-600 fs-5 mb-3">
+        <i class="bi bi-clipboard2-check me-2 text-med-accent"></i>Diagnosis Reports
+        <span class="badge badge-completed ms-2 rounded-pill px-2 py-1 fs-6">{{ reports | length }}</span>
+      </h2>
+
+      {% if reports %}
+        <div class="d-flex flex-column gap-3">
+          {% for report in reports %}
+          <div class="card-med p-4">
+            <!-- Report header -->
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div class="icon-circle ic-green">
+                <i class="bi bi-clipboard2-check"></i>
+              </div>
+              <div>
+                <div class="fw-600">Diagnosis Report</div>
+                <div class="text-med-muted small">Dr. {{ appt.DoctorName }} &mdash; {{ appt.Date }}</div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <!-- Diagnosis -->
+              <div class="col-12">
+                <div class="p-3 rounded-3" style="background:var(--med-surface);border-left:3px solid #75d69c;">
+                  <div class="text-med-muted small fw-500 mb-1">
+                    <i class="bi bi-activity me-1"></i>DIAGNOSIS
+                  </div>
+                  <div>{{ report.Diagnosis }}</div>
+                </div>
+              </div>
+
+              <!-- Prescription -->
+              {% if report.Prescription %}
+              <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background:var(--med-surface);border-left:3px solid #6ea8fe;">
+                  <div class="text-med-muted small fw-500 mb-1">
+                    <i class="bi bi-capsule me-1"></i>PRESCRIPTION
+                  </div>
+                  <div>{{ report.Prescription }}</div>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Notes -->
+              {% if report.Notes %}
+              <div class="col-md-6">
+                <div class="p-3 rounded-3" style="background:var(--med-surface);border-left:3px solid #ffc107;">
+                  <div class="text-med-muted small fw-500 mb-1">
+                    <i class="bi bi-journal-text me-1"></i>DOCTOR'S NOTES
+                  </div>
+                  <div class="text-med-muted">{{ report.Notes }}</div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="card-med p-5 text-center">
+          {% if appt.Status == 'Completed' %}
+            <div class="icon-circle ic-green mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+              <i class="bi bi-clipboard2"></i>
+            </div>
+            <h5 class="fw-600 mb-2">No report submitted yet</h5>
+            <p class="text-med-muted">The doctor hasn't submitted a diagnosis report for this appointment.</p>
+          {% elif appt.Status == 'Cancelled' %}
+            <div class="icon-circle ic-red mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+              <i class="bi bi-x-circle"></i>
+            </div>
+            <h5 class="fw-600 mb-2">Appointment Cancelled</h5>
+            <p class="text-med-muted">This appointment was cancelled. No diagnosis report is available.</p>
+          {% else %}
+            <div class="icon-circle ic-yellow mx-auto mb-3" style="width:64px;height:64px;font-size:1.8rem;">
+              <i class="bi bi-hourglass-split"></i>
+            </div>
+            <h5 class="fw-600 mb-2">Awaiting appointment</h5>
+            <p class="text-med-muted">The diagnosis report will appear here after your appointment is completed.</p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Bottom nav -->
+      <div class="mt-4 d-flex gap-2 flex-wrap">
+        <a href="{{ url_for('patients.dashboard') }}" class="btn btn-med-outline">
+          <i class="bi bi-grid-1x2 me-2"></i>Dashboard
+        </a>
+        <a href="{{ url_for('patients.history') }}" class="btn btn-med-outline">
+          <i class="bi bi-clock-history me-2"></i>All Medical History
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

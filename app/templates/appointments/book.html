@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+
+      <div class="page-header">
+        <h1 class="page-title">
+          <i class="bi bi-calendar-plus-fill me-2 text-med-accent"></i>Book Appointment
+        </h1>
+        <p class="page-subtitle">Schedule a visit with a doctor</p>
+      </div>
+
+      <div class="card-med p-4">
+        <form method="POST" action="{{ url_for('appointments.book') }}" novalidate>
+
+          <!-- Doctor Selection -->
+          <div class="mb-4">
+            <label for="doctor_id" class="form-label">Select Doctor <span class="text-danger">*</span></label>
+            <select class="form-select" id="doctor_id" name="doctor_id" required>
+              <option value="" disabled {% if not selected_doctor %}selected{% endif %}>Choose a doctor…</option>
+              {% for doc in doctors %}
+              <option value="{{ doc.DoctorID }}" {% if selected_doctor == doc.DoctorID %}selected{% endif %}>
+                Dr. {{ doc.Name }}{% if doc.Specialization %} — {{ doc.Specialization }}{% endif %}
+              </option>
+              {% endfor %}
+            </select>
+            {% if not doctors %}
+            <div class="text-med-muted small mt-1">
+              <i class="bi bi-info-circle me-1"></i>No doctors registered yet.
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Date -->
+          <div class="mb-3">
+            <label for="date" class="form-label">Preferred Date <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="date" name="date"
+                   value="{{ selected_date or '' }}"
+                   min="{{ '' }}" required>
+          </div>
+
+          <!-- Time -->
+          <div class="mb-3">
+            <label for="time" class="form-label">Preferred Time <span class="text-danger">*</span></label>
+            <input type="time" class="form-control" id="time" name="time"
+                   value="{{ selected_time or '' }}" required>
+          </div>
+
+          <!-- Reason -->
+          <div class="mb-4">
+            <label for="reason" class="form-label">Reason for Visit</label>
+            <textarea class="form-control" id="reason" name="reason" rows="3"
+                      placeholder="Brief description of your concern…">{{ reason or '' }}</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-med-primary w-100">
+            <i class="bi bi-calendar-check-fill me-2"></i>Confirm Appointment
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-med-muted small mt-3">
+        <a href="{{ url_for('patients.dashboard') }}" class="text-med-accent text-decoration-none">
+          <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+  // Set today as the default minimum date
+  const dateInput = document.getElementById('date');
+  if (dateInput && !dateInput.value) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+  }
+</script>
+{% endblock %}
+{% endblock %}
