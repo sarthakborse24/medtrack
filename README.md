@@ -85,7 +85,6 @@ DIAGNOSIS_REPORTS_TABLE=MedTrack_DiagnosisReports
 SNS_TOPIC_ARN=arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID:MedTrackNotifications
 ```
 
-> **Never commit your `.env` file.** It is listed in `.gitignore`.
 
 ### 3. AWS Credentials
 
